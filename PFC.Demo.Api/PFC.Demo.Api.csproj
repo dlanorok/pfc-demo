@@ -141,6 +141,7 @@
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>
+    <Content Include="App_Data\DB_Create_Script.sql" />
     <Content Include="App_Data\Personas.mdf" />
     <Content Include="App_Data\Personas_log.ldf">
       <DependentUpon>Personas.mdf</DependentUpon>
