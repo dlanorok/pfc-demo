@@ -1,0 +1,186 @@
+﻿@model PFC.Demo.Domain.Models.PersonaEntity
+
+@{
+    ViewBag.Title = "Eliminar Persona";
+}
+
+<h2>Persona</h2>
+
+<div>
+    <h4>@ViewBag.Title</h4>
+     
+    <div class="form-actions no-color">
+        <input type="button" value="Confirmar Eliminacion" class="btn btn-danger btn-outline eliminar-persona" />
+    </div>
+     
+    <div class="alert alert-success alert-delete-success" style="display:none;" role="alert">
+        El Registro se ha eliminado exitosamente!
+    </div>
+    <div class="alert alert-danger alert-delete-error" style="display:none;" role="alert">
+        Hubo un error al eliminar el registro!
+    </div>
+    <hr />
+    @Html.HiddenFor(model => model.Id)
+    <div class="row">
+        <div class="col">
+            <dl class="dl-horizontal">
+                <dt>
+                    @Html.DisplayNameFor(model => model.Identificacion)
+                </dt>
+
+                <dd>
+                    @Html.DisplayFor(model => model.Identificacion)
+                </dd>
+
+                <dt>
+                    @Html.DisplayNameFor(model => model.Nombre)
+                </dt>
+
+                <dd>
+                    @Html.DisplayFor(model => model.Nombre)
+                </dd>
+
+                <dt>
+                    @Html.DisplayNameFor(model => model.Apellidos)
+                </dt>
+
+                <dd>
+                    @Html.DisplayFor(model => model.Apellidos)
+                </dd>
+
+                <dt>
+                    @Html.DisplayNameFor(model => model.FechaNacimiento)
+                </dt>
+
+                <dd>
+                    @Model.FechaNacimiento.ToString("dd/MM/yyyy")
+                </dd>
+
+
+            </dl>
+        </div>
+        <div class="col">
+            <dl class="dl-horizontal">
+
+
+                <dt>
+                    @Html.DisplayNameFor(model => model.Direccion)
+                </dt>
+
+                <dd>
+                    @Html.DisplayFor(model => model.Direccion)
+                </dd>
+
+                <dt>
+                    @Html.DisplayNameFor(model => model.Referencia)
+                </dt>
+
+                <dd>
+                    @Html.DisplayFor(model => model.Referencia)
+                </dd>
+
+                <dt>
+                    @Html.DisplayNameFor(model => model.Ciudad)
+                </dt>
+
+                <dd>
+                    @Html.DisplayFor(model => model.Ciudad)
+                </dd>
+
+                <dt>
+                    @Html.DisplayNameFor(model => model.Provincia)
+                </dt>
+
+                <dd>
+                    @Html.DisplayFor(model => model.Provincia)
+                </dd>
+
+                <dt>
+                    @Html.DisplayNameFor(model => model.Pais)
+                </dt>
+
+                <dd>
+                    @Html.DisplayFor(model => model.Pais)
+                </dd>
+
+                <dt>
+                    @Html.DisplayNameFor(model => model.CodigoPostal)
+                </dt>
+
+                <dd>
+                    @Html.DisplayFor(model => model.CodigoPostal)
+                </dd>
+
+            </dl>
+        </div>
+    </div>
+</div>
+<p>
+    @Html.ActionLink("Volver al Inicio", "Index")
+</p>
+
+@section Scripts{
+    <script>
+        var $url_eliminar_persona = "@Url.Action("Delete", new { id = Model.Id})";
+
+        function eliminarRegistro() {
+
+            $.ajax({
+                type: "POST",
+                url: $url_eliminar_persona,
+                success: function (result) {
+                    var msg = "No se pudo eliminar el registro! Intente nuevamente...";
+                    if (result) {
+                        if (result.Success) {
+                            showDeleteSuccess()
+                            return;
+                        } else {
+                            msg = result.Message || result.message;
+                        }
+                    }
+
+                    showDeleteError(msg);
+                },
+                error: function (error) {
+                    var msg = "No se pudo eliminar el registro! Intente nuevamente...";
+                    if (error && error.message) {
+                        msg = error.Message || error.message || error.responseText;
+                    }
+
+                    showDeleteError(msg);
+                }
+            });
+        }
+
+
+        function showDeleteSuccess() {
+            $(".alert-delete-success").show();
+
+            setTimeout(function () {
+                $(".alert-delete-success").hide();
+                location.reload();
+            }, 1000);
+        }
+
+
+        function showDeleteError(msg) {
+            $(".alert-delete-error").html(msg);
+            $(".alert-delete-error").show();
+
+            setTimeout(function () {
+                $(".alert-delete-error").hide();
+            }, 5000);
+        }
+
+
+        document.addEventListener("DOMContentLoaded", function (event) {
+         
+        $(".eliminar-persona").on("click", function () {
+        var eliminar = confirm("Esta seguro que desea eliminar este registro?");
+        if (eliminar) {
+            eliminarRegistro();
+        }
+    });
+});
+    </script>
+}

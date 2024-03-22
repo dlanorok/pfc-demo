@@ -1,0 +1,121 @@
+﻿@model PFC.Demo.Domain.Models.PersonaViewModel  
+
+@{
+    ViewBag.Title = "Detalles de la Persona";
+}
+
+<h2>Persona</h2>
+
+<div>
+    <h4>@ViewBag.Title</h4>
+    <p>
+        @Html.ActionLink("Modificar Registro", "Edit", new { id = Model.Id }, new { @class = "btn btn-primary btn-outline" })
+    </p>
+    <hr />
+    @Html.HiddenFor(model => model.Id)
+    <div class="row">
+        <div class="col">
+            <dl class="dl-horizontal">
+                <dt>
+                    @Html.DisplayNameFor(model => model.Identificacion)
+                </dt>
+
+                <dd>
+                    @Html.DisplayFor(model => model.Identificacion)
+                </dd>
+
+                <dt>
+                    @Html.DisplayNameFor(model => model.Nombre)
+                </dt>
+
+                <dd>
+                    @Html.DisplayFor(model => model.Nombre)
+                </dd>
+
+                <dt>
+                    @Html.DisplayNameFor(model => model.Apellidos)
+                </dt>
+
+                <dd>
+                    @Html.DisplayFor(model => model.Apellidos)
+                </dd>
+
+                <dt>
+                    @Html.DisplayNameFor(model => model.FechaNacimiento)
+                </dt>
+
+                <dd>
+                    @Model.FechaNacimiento.ToString("dd/MM/yyyy")
+                </dd>
+
+
+            </dl>
+        </div>
+        <div class="col">
+            <dl class="dl-horizontal">
+
+
+                <dt>
+                    @Html.DisplayNameFor(model => model.Direccion)
+                </dt>
+
+                <dd>
+                    @Html.DisplayFor(model => model.Direccion)
+                </dd>
+
+                <dt>
+                    @Html.DisplayNameFor(model => model.Referencia)
+                </dt>
+
+                <dd>
+                    @Html.DisplayFor(model => model.Referencia)
+                </dd>
+
+                <dt>
+                    @Html.DisplayNameFor(model => model.Ciudad)
+                </dt>
+
+                <dd>
+                    @Html.DisplayFor(model => model.Ciudad)
+                </dd>
+
+                <dt>
+                    @Html.DisplayNameFor(model => model.Provincia)
+                </dt>
+
+                <dd>
+                    @Html.DisplayFor(model => model.Provincia)
+                </dd>
+
+                <dt>
+                    @Html.DisplayNameFor(model => model.Pais)
+                </dt>
+
+                <dd>
+                    @Html.DisplayFor(model => model.Pais)
+                </dd>
+
+                <dt>
+                    @Html.DisplayNameFor(model => model.CodigoPostal)
+                </dt>
+
+                <dd>
+                    @Html.DisplayFor(model => model.CodigoPostal)
+                </dd>
+
+            </dl>
+        </div>
+    </div>
+
+    <div class="row">
+        <div class="col" id="cuentas_bancarias">
+            @{
+                Html.RenderPartial("CuentasBancarias", Model);
+            }
+        </div>
+    </div>
+</div>
+<p>
+    @Html.ActionLink("Volver al Inicio", "Index")
+</p>
+   
