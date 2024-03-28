@@ -14,13 +14,13 @@
     var tipos = PFC.Demo.ClientApp.Services.Utils.GetTiposDropdownItems();
 }
 
-<form id="CuentaBancariaForm">
+<form id="CuentaBancariaForm" data-action="@Html.Raw(actionForm)">
     <!-- Modal -->
     <div class="modal-dialog" role="document">
         <div class="modal-content">
-            <div class="modal-header">
+            <div class="modal-header bg-dark text-bg-dark">
                 <h5 class="modal-title" id="editModalLabel">@viewTitle</h5>
-                <button type="button" class="close" data-bs-dismiss="modal" aria-label="Close">
+                <button type="button" class="btn close" data-bs-dismiss="modal" aria-label="Close">
                     <span aria-hidden="true">&times;</span>
                 </button>
             </div>
@@ -39,34 +39,42 @@
 
                     @Html.ValidationSummary(true, "", new { @class = "text-danger" })
 
-                    <div class="form-group">
-                        @Html.LabelFor(model => model.Tipo, htmlAttributes: new { @class = "control-label col-md-2" })
-                        <div class="col-md-10">
-                            @Html.DropDownListFor(model => model.Tipo, tipos, new { @class = "form-control" })
+                    <div class="form-group row">
+                        <div class="col-md-4">
+                            @Html.LabelFor(model => model.Tipo, htmlAttributes: new { @class = "control-label" })
+                        </div>
+                        <div class="col-md-8">
+                            @Html.EnumDropDownListFor(model => model.Tipo, "Seleccione el tipo de cuenta", new { @class = "form-control" })
                             @Html.ValidationMessageFor(model => model.Tipo, "", new { @class = "text-danger" })
                         </div>
                     </div>
 
-                    <div class="form-group">
-                        @Html.LabelFor(model => model.NumeroCuenta, htmlAttributes: new { @class = "control-label col-md-2" })
-                        <div class="col-md-10">
+                    <div class="form-group row">
+                        <div class="col-md-4">
+                            @Html.LabelFor(model => model.NumeroCuenta, htmlAttributes: new { @class = "control-label" })
+                        </div>
+                        <div class="col-md-8">
                             @Html.EditorFor(model => model.NumeroCuenta, new { htmlAttributes = new { @class = "form-control" } })
                             @Html.ValidationMessageFor(model => model.NumeroCuenta, "", new { @class = "text-danger" })
                         </div>
                     </div>
 
-                    <div class="form-group">
-                        @Html.LabelFor(model => model.Balance, htmlAttributes: new { @class = "control-label col-md-2" })
-                        <div class="col-md-10">
+                    <div class="form-group row">
+                        <div class="col-md-4">
+                            @Html.LabelFor(model => model.Balance, htmlAttributes: new { @class = "control-label" })
+                        </div>
+                        <div class="col-md-8">
                             @Html.EditorFor(model => model.Balance, new { htmlAttributes = new { @type = "number", min = 0, @class = "form-control" } })
                             @Html.ValidationMessageFor(model => model.Balance, "", new { @class = "text-danger" })
                         </div>
                     </div>
 
-                    <div class="form-group">
-                        @Html.LabelFor(model => model.Comentarios, htmlAttributes: new { @class = "control-label col-md-2" })
-                        <div class="col-md-10">
-                            @Html.EditorFor(model => model.Comentarios, new { htmlAttributes = new { @class = "form-control" } })
+                    <div class="form-group row">
+                        <div class="col-md-4">
+                            @Html.LabelFor(model => model.Comentarios, htmlAttributes: new { @class = "control-label" })
+                        </div>
+                        <div class="col-md-8">
+                            @Html.TextAreaFor(model => model.Comentarios, new { @class = "form-control w-100" })
                             @Html.ValidationMessageFor(model => model.Comentarios, "", new { @class = "text-danger" })
                         </div>
                     </div>
@@ -77,67 +85,14 @@
             </div>
             <div class="modal-footer">
                 <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
-                <button type="submit" class="btn btn-primary">Guardar</button>
+                <button type="submit" class="btn btn-primary">
+                      <i class="fa fa-check"></i>Guardar
+                </button>
             </div>
         </div>
     </div>
 </form>
 
 <script>
-    var cuentaBancariaForm = document.getElementById("CuentaBancariaForm");
-
-    function guardarCuentaBancaria(e) {
-        e.preventDefault();
-        $.validator.unobtrusive.parse($(cuentaBancariaForm));
-        if (!$(cuentaBancariaForm).valid())
-            return false;
-        
-        var action = '@Html.Raw(actionForm)';
-        var form_data = $(cuentaBancariaForm).serializeJson();
-        console.log(action, form_data);
-        $.ajax({
-            type: "POST",
-            url: action,
-            data: form_data,
-            success: function (result) {
-                var msg = "No se pudo guardar el registro! Intente nuevamente...";
-                if (result) {
-                    if (result.Success) {
-                        $(".alert-save-success").show();
-                        $("#divModal").modal("hide");
-                        location.reload();
-                        return;
-
-                    } else {
-                        msg = result.Message || result.message;
-                    }
-                }
-
-                showEditError(msg);
-            },
-            error: function (error) {
-                var msg = "No se pudo guardar el registro! Intente nuevamente...";
-                if (error && error.message) {
-                    msg = error.Message || error.message || error.responseText;
-                }
-
-                showEditError(msg);
-            }
-        });
-    }
-
-    function showEditError(msg) {
-        $(".alert-save-error").html(msg);
-        $(".alert-save-error").show();
-
-        setTimeout(function () {
-            $(".alert-save-error").hide();
-        }, 5000);
-    }
-
-    cuentaBancariaForm.addEventListener("submit", guardarCuentaBancaria);
-    document.addEventListener("DOMContentLoaded", function (){
-        $.validator.unobtrusive.parse(cuentaBancariaForm);
-        !$(cuentaBancariaForm).valid();
-    });
+    app.cuenta_bancaria.editar();    
 </script>

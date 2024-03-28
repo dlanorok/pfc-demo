@@ -126,19 +126,6 @@ namespace PFC.Demo.ClientApp.Controllers
             }
         }
 
-        // GET: Persona/Delete/5
-        public async Task<ActionResult> Delete(int id)
-        {
-            var model = await Services.PersonaService.GetPersonaById(id);
-            if (!model.Success)
-            {
-                ViewData["Message"] = model.Message;
-                return RedirectToAction("Index");
-            }
-
-            return View(model.Result);
-        }
-
         // POST: Persona/Delete/5
         [HttpPost]
         public async Task<ActionResult> Delete(int id, FormCollection collection)

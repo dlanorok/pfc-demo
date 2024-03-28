@@ -1,25 +1,22 @@
-﻿/* Set padding to keep content from hitting the edges */
+﻿body{
+    background: radial-gradient(aliceblue , white);
+} 
+
+/* Configura el relleno para evitar que el contenido llegue a los bordes */
 .body-content {
     margin-top: 15px;
     padding-left: 15px;
     padding-right: 15px;
 }
 
-/* Override the default bootstrap behavior where horizontal description lists 
-   will truncate terms that are too long to fit in the left column 
+/* Anula el comportamiento de arranque predeterminado donde las listas de descripciones 
+    horizontales truncando los bordes que son demasiado largos para caber en la columna de la izquierda.
 */
 .dl-horizontal dt {
     white-space: normal;
 }
-
-/* Set width on the form input elements since they're 100% wide by default */
-input,
-select,
-textarea {
-    max-width: 280px;
-}
-
-/* Set padding to display errors that occur during databinding */
+ 
+/* Ajusta el padding superior para mostrar los errores que ocurran durante el databinding */
 .padding-error {
     padding-top: 20px;
 }
@@ -29,4 +26,16 @@ textarea {
         float: none;
         padding: 10px 15px;
     }
+}
+
+/* Estilo personalizado para los botones flat semiredondos */
+.btn {
+    border-radius: 25px;
+    padding: 10px 20px;
+    border: none;
+    transition: all 0.3s ease;
+}
+
+.btn:hover {
+    opacity: 0.8;
 }

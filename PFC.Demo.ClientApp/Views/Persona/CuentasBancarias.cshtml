@@ -1,8 +1,5 @@
-﻿@model PFC.Demo.Domain.Models.PersonaViewModel
-@{
-    var personaId = Model.Id;
-    var cuentasBancarias = Model.CuentasBancarias;
-}
+﻿@using PFC.Demo.ClientApp.Services
+@model PFC.Demo.Domain.Models.PersonaViewModel
 <p>
     <button type="button" class="btn btn-warning add-cuenta">Agregar Cuenta Bancaria +</button>
 </p>
@@ -33,7 +30,7 @@
     {
         <tr>
             <td>
-                @item.Tipo.ToString()
+                @item.Tipo.GetDisplayName()
             </td>
             <td>
                 @item.NumeroCuenta
@@ -53,102 +50,4 @@
         </tr>
     }
 
-</table>
-
-
-<script>
-
-    var $url_crear_cuenta = "@Url.Action("Create","CuentaBancaria")";
-    var $url_editar_cuenta = "@Url.Action("Edit","CuentaBancaria")";
-    var $url_eliminar_cuenta = "@Url.Action("Delete","CuentaBancaria")";
-
-    function show_modal_cuenta($url) {
-        $('#divModal').empty();
-
-        $.ajax({
-            url: $url,
-            type: 'GET',
-            beforeSend: function () {
-            },
-            complete: function () {
-            }
-        }).done(function (respuesta) {
-            if (respuesta != '') {
-                $('#divModal').html(respuesta);
-                $('#divModal').modal('show', { backdrop: 'static' });
-            } else {
-                $('#divModal').modal('hide');
-            }
-        });
-    }
-
-    function eliminarCuenta(id) {
-        var url$ = `${$url_eliminar_cuenta}/${id}`
-
-        $.ajax({
-            type: "POST",
-            url: url$,
-            success: function (result) {
-                var msg = "No se pudo eliminar el registro! Intente nuevamente...";
-                if (result) {
-                    if (result.Success) {
-                        showDeleteSuccess()
-                        return;
-                    } else {
-                        msg = result.Message || result.message;
-                    }
-                }
-
-                showDeleteError(msg);
-            },
-            error: function (error) {
-                var msg = "No se pudo eliminar el registro! Intente nuevamente...";
-                if (error && error.message) {
-                    msg = error.Message || error.message || error.responseText;
-                }
-
-                showDeleteError(msg);
-            }
-        });
-    }
-
-
-    function showDeleteSuccess() {
-        $(".alert-delete-success").show();
-
-        setTimeout(function () {
-            $(".alert-delete-success").hide();
-            location.reload();
-        }, 1000);
-    }
-
-
-    function showDeleteError(msg) {
-        $(".alert-delete-error").html(msg);
-        $(".alert-delete-error").show();
-
-        setTimeout(function () {
-            $(".alert-delete-error").hide();
-        }, 5000);
-    }
-
-    document.addEventListener("DOMContentLoaded", function (event) {
-        $(".add-cuenta").on("click", function () {
-            var id = @Html.Raw(personaId);
-            var url = `${$url_crear_cuenta}?personaId=${id}`
-            show_modal_cuenta(url);
-        });
-        $(".editar-cuenta").on("click", function () {
-            var id = $(this).attr("data-id-cuenta")
-            var url = `${$url_editar_cuenta}/${id}`
-            show_modal_cuenta(url);
-        });
-        $(".eliminar-cuenta").on("click", function () {
-            var eliminar = confirm("Esta seguro que desea eliminar esta cuenta?");
-            if (eliminar) {
-                var id = $(this).attr("data-id-cuenta")
-                eliminarCuenta(id);
-            }
-        });
-    });
-</script>
+</table> 

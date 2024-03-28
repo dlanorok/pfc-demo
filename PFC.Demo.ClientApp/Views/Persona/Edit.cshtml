@@ -12,6 +12,7 @@
         ViewBag.Title = "Crear Nuevo Registro";
     }
 
+    var personaId    = Model.Id;
     var paises       = ViewData["paises"] as List<PaisModel>;
     var provincias   = ViewData["provincias"] as List<ProvinciaModel>;
     var ciudades     = ViewData["ciudades"] as List<CiudadModel>;
@@ -141,7 +142,8 @@
 
         <div class="row">
             <div class="col" id="cuentas_bancarias">
-                @if(Model.Id > 0){
+                @if (Model.Id > 0)
+                {
                     Html.RenderPartial("CuentasBancarias", Model);
                 }
             </div>
@@ -158,69 +160,29 @@
 @section Scripts {
 
     <script> 
-        var paisDropDown = document.getElementById("Pais");
-        var provinciaDropDown = document.getElementById("Provincia");
-        var ciudadDropDown = document.getElementById("Ciudad");
-
-        paisDropDown.addEventListener("change", function (e) {
-            var paisId = e.target.value;
-            ciudadDropDown.innerHTML = "";
-            provinciaDropDown.innerHTML = "";
-            fetch(`/catalogo/GetProvinciasByPaisId/${paisId}`)
-                .then(function (response) {
-                    if (response.ok) {
-                        response.json().then(result =>{
-                            var provincias = result.Result;
-                            if (provincias)
-                            for (var i = 0; i < provincias.length; i++) {
-                                var provincia = provincias[i];
-                                provinciaDropDown.appendChild(createOption(provincia.Nombre));
-                            }
-                        });
-                    }
-                });
+        document.addEventListener("DOMContentLoaded", function (){
+            // Agrego las configuraciones para el proceso de Edicion
+            app.cliente.configure_editor();
             
-        });
-
-        provinciaDropDown.addEventListener("change", function (e) {
-            var provinciaId = e.target.value;
+            // Agrego la configuracion necesaria para mostrar algun mensaje de error durante la edicion
+            var errorDiv$ = document.getElementsByClassName("alert-save-error");
             
-            ciudadDropDown.innerHTML = "";
-            fetch(`/catalogo/GetCiudadesByProvinciaId/${provinciaId}`)
-                .then(function (response) {
-                    if (response.ok){
-                        response.json().then(result =>{
-                            if (result.Success) {
-                                var ciudades = result.Result;
-                                if (ciudades)
-                                for (var i = 0; i < ciudades.length; i++) {
-                                    var ciudad = ciudades[i];
-                                    ciudadDropDown.appendChild(createOption(ciudad.Nombre))
-                                }
-                            }
-                        });
-                    }
-                });
-        });
-
-        function createOption(text){
-            var option = document.createElement("option");
-            option.text = text;
-            return option;
-        }
-        
-        var errorDiv$ = document.getElementsByClassName("alert-save-error");
-
-        var errorMessage = '@Html.Raw(errorMessage)';
-        if (errorMessage){
-            document.addEventListener("DOMContentLoaded", function (){
-                if (errorMessage){
-                    $(errorDiv$).show();
-                }
+            var errorMessage = '@Html.Raw(errorMessage)';
+                        
+            if (errorMessage){
+                $(errorDiv$).show();
+            
                 setTimeout(function (){
                     $(errorDiv$).hide();
-                }, 5000)    
-            });
-        }
+                }, 5000)
+            }        
+        
+            // Inicializo los servicios para administrar las cuentas bancarias.
+            var $url_crear_cuenta = "@Url.Action("Create", "CuentaBancaria", new { personaId = personaId })";
+            var $url_editar_cuenta = "@Url.Action("Edit", "CuentaBancaria")";
+            var $url_eliminar_cuenta = "@Url.Action("Delete", "CuentaBancaria")";
+            
+            app.cuenta_bancaria.initialize($url_crear_cuenta, $url_editar_cuenta, $url_eliminar_cuenta)        
+        });
     </script>
 }

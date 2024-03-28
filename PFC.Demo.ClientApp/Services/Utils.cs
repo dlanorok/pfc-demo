@@ -1,8 +1,11 @@
 ﻿using Newtonsoft.Json;
 using System;
 using System.Collections.Generic;
+using System.ComponentModel.DataAnnotations;
 using System.Configuration;
+using System.Linq;
 using System.Net.Http;
+using System.Reflection;
 using System.Web.Mvc;
 
 namespace PFC.Demo.ClientApp.Services
@@ -51,5 +54,15 @@ namespace PFC.Demo.ClientApp.Services
                 };
             }
         }
+        
+        public static string GetDisplayName(this Enum value)
+        {
+            return value.GetType()
+                        .GetMember(value.ToString())
+                        .First()
+                        .GetCustomAttribute<DisplayAttribute>()
+                        ?.GetName();
+        }
+
     }
 }

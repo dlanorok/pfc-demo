@@ -2,16 +2,20 @@
 
 @{
     ViewBag.Title = "Informacion Personal";
+    var personaId = Model.Id;
 }
 
 <h2>Cliente</h2>
 
 <div>
     <h4>@ViewBag.Title</h4>
-    <p>
-        @Html.ActionLink("Modificar Registro", "Edit", new { id = Model.Id }, new { @class = "btn btn-primary btn-outline" })
-    </p>
-    <hr />
+    <div class="btn-group" role="group" aria-label="">
+        @Html.ActionLink("Modificar", "Edit", new { id = Model.Id }, new { @class = "btn btn-primary btn-outline editar-persona" })
+        <a class="btn btn-danger btn-outline eliminar-persona" data-action-url="@Url.Action("Delete", new { id = Model.Id })">Eliminar</a>
+
+    </div>
+    <hr/>
+
     @Html.HiddenFor(model => model.Id)
     <div class="row">
         <div class="col">
@@ -118,4 +122,19 @@
 <p>
     @Html.ActionLink("Volver al Inicio", "Index")
 </p>
-   
+
+@section Scripts{
+    <script>    
+        document.addEventListener("DOMContentLoaded", function (){
+            // Agrego la configuracion para eliminar Clientes
+            app.cliente.configure_delete();
+             
+            // Inicializo los servicios para administrar las cuentas bancarias.
+            var $url_crear_cuenta = "@Url.Action("Create", "CuentaBancaria", new { personaId = personaId })";
+            var $url_editar_cuenta = "@Url.Action("Edit", "CuentaBancaria")";
+            var $url_eliminar_cuenta = "@Url.Action("Delete", "CuentaBancaria")";
+            
+            app.cuenta_bancaria.initialize($url_crear_cuenta, $url_editar_cuenta, $url_eliminar_cuenta)
+        });
+    </script>
+}

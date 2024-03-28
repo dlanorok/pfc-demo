@@ -10,6 +10,7 @@ namespace PFC.Demo.Domain.Models
 
         [Required(ErrorMessage="El Numero de Identificación es requerido")]
         [DisplayName("Identificación")]
+        [MinLength(10, ErrorMessage = "La identificación debe tener al menos 10 caracteres")]
         public string Identificacion { get; set; }
 
         [Required(ErrorMessage="Por favor ingrese los nombres del cliente")]
