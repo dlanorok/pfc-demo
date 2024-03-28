@@ -152,36 +152,31 @@
 
     </div>
 }
-
 <div>
     @Html.ActionLink("Volver al Inicio", "Index")
 </div>
 
 @section Scripts {
-
     <script> 
         document.addEventListener("DOMContentLoaded", function (){
             // Agrego las configuraciones para el proceso de Edicion
             app.cliente.configure_editor();
             
             // Agrego la configuracion necesaria para mostrar algun mensaje de error durante la edicion
-            var errorDiv$ = document.getElementsByClassName("alert-save-error");
-            
             var errorMessage = '@Html.Raw(errorMessage)';
-                        
             if (errorMessage){
+                var errorDiv$ = document.getElementsByClassName("alert-save-error");
                 $(errorDiv$).show();
             
                 setTimeout(function (){
                     $(errorDiv$).hide();
                 }, 5000)
-            }        
+            }
         
             // Inicializo los servicios para administrar las cuentas bancarias.
             var $url_crear_cuenta = "@Url.Action("Create", "CuentaBancaria", new { personaId = personaId })";
             var $url_editar_cuenta = "@Url.Action("Edit", "CuentaBancaria")";
             var $url_eliminar_cuenta = "@Url.Action("Delete", "CuentaBancaria")";
-            
             app.cuenta_bancaria.initialize($url_crear_cuenta, $url_editar_cuenta, $url_eliminar_cuenta)        
         });
     </script>

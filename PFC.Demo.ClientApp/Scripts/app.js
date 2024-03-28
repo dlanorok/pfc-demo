@@ -284,7 +284,7 @@ app = (function(){
 
             },
 
-            editar: function () {
+            configure_editor: function () {
                 var cuentaBancariaForm = document.getElementById("CuentaBancariaForm");
                 cuentaBancariaForm.addEventListener("submit", guardarCuentaBancaria);
 
