@@ -39,6 +39,7 @@ namespace PFC.Demo.ClientApp
 
             bundles.Add(new StyleBundle("~/Content/css").Include(
                  "~/Content/bootstrap.css",
+                 "~/Styles/custom.css",
                  "~/Content/Site.css"));
         }
     }

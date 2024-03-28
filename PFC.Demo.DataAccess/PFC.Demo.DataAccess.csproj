@@ -31,6 +31,9 @@
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
   <ItemGroup>
+    <Reference Include="Newtonsoft.Json, Version=13.0.0.0, Culture=neutral, PublicKeyToken=30ad4fe6b2a6aeed, processorArchitecture=MSIL">
+      <HintPath>..\packages\Newtonsoft.Json.13.0.3\lib\net45\Newtonsoft.Json.dll</HintPath>
+    </Reference>
     <Reference Include="System" />
     <Reference Include="System.Configuration" />
     <Reference Include="System.Core" />
@@ -42,18 +45,27 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="ConnectionFactory.cs" />
-    <Compile Include="CuentaBancariaDao.cs" />
-    <Compile Include="DataExtensions.cs" />
-    <Compile Include="PersonaDao.cs" />
+    <Compile Include="Entities\CiudadEntity.cs" />
+    <Compile Include="Entities\CuentaBancariaEntity.cs" />
+    <Compile Include="Entities\CuentaBancariaUpdateEntity.cs" />
+    <Compile Include="Entities\PaisEntity.cs" />
+    <Compile Include="Entities\PersonaEntity.cs" />
+    <Compile Include="Entities\PersonaUpdateEntity.cs" />
+    <Compile Include="Entities\ProvinciaEntity.cs" />
+    <Compile Include="Extensions\DataExtensions.cs" />
+    <Compile Include="Json\PaisData.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="Sql\ConnectionFactory.cs" />
+    <Compile Include="Sql\CuentaBancariaDao.cs" />
+    <Compile Include="Sql\PersonaDao.cs" />
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\PFC.Demo.Domain\PFC.Demo.Domain.csproj">
-      <Project>{7ea42efe-d308-4266-8bb0-b019b833a2de}</Project>
-      <Name>PFC.Demo.Domain</Name>
-    </ProjectReference>
+    <None Include="packages.config" />
   </ItemGroup>
-  <ItemGroup />
+  <ItemGroup>
+    <EmbeddedResource Include="Json\paises.json">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </EmbeddedResource>
+  </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>

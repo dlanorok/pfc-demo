@@ -26,11 +26,12 @@ namespace PFC.Demo.ClientApp.Areas.HelpPage
     public static class HelpPageConfig
     {
         [SuppressMessage("Microsoft.Globalization", "CA1303:Do not pass literals as localized parameters",
-            MessageId = "PFC.Demo.ClientApp.Areas.HelpPage.TextSample.#ctor(System.String)",
-            Justification = "End users may choose to merge this string with existing localized resources.")]
+                         MessageId = "PFC.Demo.ClientApp.Areas.HelpPage.TextSample.#ctor(System.String)",
+                         Justification =
+                             "End users may choose to merge this string with existing localized resources.")]
         [SuppressMessage("Microsoft.Naming", "CA2204:Literals should be spelled correctly",
-            MessageId = "bsonspec",
-            Justification = "Part of a URI.")]
+                         MessageId = "bsonspec",
+                         Justification = "Part of a URI.")]
         public static void Register(HttpConfiguration config)
         {
             //// Uncomment the following to use the documentation from XML documentation file.

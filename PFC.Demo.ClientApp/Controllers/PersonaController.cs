@@ -10,6 +10,8 @@ using System.Reflection;
 using System.Threading.Tasks;
 using System.Web;
 using System.Web.Mvc;
+using System.Net;
+using System.ComponentModel.DataAnnotations;
 
 namespace PFC.Demo.ClientApp.Controllers
 {
@@ -18,7 +20,7 @@ namespace PFC.Demo.ClientApp.Controllers
         // GET: Persona
         public async Task<ActionResult> Index()
         {
-            var model = new List<PersonaEntity>();
+            var model = new List<PersonaModel>();
             var result = await Services.PersonaService.GetAllPersonas();
             if (result.Success)
             {
@@ -28,6 +30,7 @@ namespace PFC.Demo.ClientApp.Controllers
             {
                 ViewData["Message"] = result.Message;
             }
+
             return View(model);
         }
 
@@ -40,6 +43,7 @@ namespace PFC.Demo.ClientApp.Controllers
                 ViewData["Message"] = model.Message;
                 return RedirectToAction("Index");
             }
+
             model.Result.Id = id;
             return View(model.Result);
         }
@@ -47,44 +51,36 @@ namespace PFC.Demo.ClientApp.Controllers
         // GET: Persona/Create
         public async Task<ActionResult> Create()
         {
-            var model = new PersonaUpdateModel();
-            return View(model);
+            var model = new PersonaViewModel();
+            await LoadCatalogos(model);
+            return View("Edit", model);
         }
 
         // POST: Persona/Create
         [HttpPost]
-        public async Task<ActionResult> Create(FormCollection collection)
+        public async Task<ActionResult> Create(PersonaViewModel model)
         {
             try
-            {
-                DateTime.TryParse(collection["FechaNacimiento"], out var fechaNacimiento);
-                var model = new PersonaUpdateModel
+            { 
+                if (!ModelState.IsValid)
                 {
-                    Identificacion = collection["Identificacion"],
-                    Nombre = collection["Nombre"],
-                    Apellidos = collection["Apellidos"],
-                    FechaNacimiento = fechaNacimiento,
-                    Direccion = collection["Direccion"],
-                    Referencia = collection["Referencia"],
-                    Ciudad = collection["Ciudad"],
-                    Provincia = collection["Provincia"],
-                    Pais = collection["Pais"],
-                    CodigoPostal = collection["CodigoPostal"]                
-                };
-                
-                var result = await Services.PersonaService.CrearPersona(model);
+                    throw new ValidationException("Hubo un error al guardar los datos!");
+                }
+
+                var data = model.ConvertTo<PersonaUpdateModel>();
+                var result = await Services.PersonaService.CrearPersona(data);
                 if (!result.Success)
                 {
-                    ViewData["CreateForm"] = model;
                     throw new Exception(result.Message);
                 }
 
                 return RedirectToAction("Index");
             }
-            catch
+            catch(Exception ex)
             {
-                var viewModel = ViewData["CreateForm"];
-                return View(viewModel);
+                ViewData["Message"] = ex.Message;
+                await LoadCatalogos(model);
+                return View("Edit", model);
             }
         }
 
@@ -97,40 +93,27 @@ namespace PFC.Demo.ClientApp.Controllers
                 ViewData["Message"] = model.Message;
                 return RedirectToAction("Index");
             }
+            
             model.Result.Id = id;
+            await LoadCatalogos(model.Result);
             return View(model.Result);
         }
 
         // POST: Persona/Edit/5
         [HttpPost]
-        public async Task<ActionResult> Edit(int id, FormCollection collection)
+        public async Task<ActionResult> Edit(int id, PersonaViewModel model)
         {
             try
             {
-                DateTime.TryParse(collection["FechaNacimiento"], out var fechaNacimiento);
-                var model = new PersonaUpdateModel
+                if (!ModelState.IsValid)
                 {
-                    Identificacion = collection["Identificacion"],
-                    Nombre = collection["Nombre"],
-                    Apellidos = collection["Apellidos"],
-                    FechaNacimiento = fechaNacimiento,
-                    Direccion = collection["Direccion"],
-                    Referencia = collection["Referencia"],
-                    Ciudad = collection["Ciudad"],
-                    Provincia = collection["Provincia"],
-                    Pais = collection["Pais"],
-                    CodigoPostal = collection["CodigoPostal"]
-                };
-
-                if (!this.TryValidateModel(model))
-                {
-                    return View(model.ConvertTo<PersonaViewModel>());
+                    throw new ValidationException("Hubo un error de validacion");
                 }
 
-                var result = await Services.PersonaService.ActualizarPersona(id, model);
+                var data   = model.ConvertTo<PersonaUpdateModel>();
+                var result = await Services.PersonaService.ActualizarPersona(id, data);
                 if (!result.Success)
                 {
-                    ViewData["EditForm"] = model.ConvertTo<PersonaViewModel>();
                     throw new Exception(result.Message);
                 }
 
@@ -138,8 +121,8 @@ namespace PFC.Demo.ClientApp.Controllers
             }
             catch
             {
-                var viewModel = ViewData["EditForm"];
-                return View(viewModel);
+                await LoadCatalogos(model);
+                return View(model);
             }
         }
 
@@ -179,9 +162,52 @@ namespace PFC.Demo.ClientApp.Controllers
         // GET: Persona/CuentasBancarias/5
         public async Task<ActionResult> CuentasBancarias(int id)
         {
-            var model = await Services.PersonaService.GetCuentaBancariasByPersonaId(id);
+            var model = await Services.PersonaService.GetPersonaById(id);
 
-            return PartialView(model?.Result ?? new List<CuentaBancariaEntity>());
+            return PartialView(model?.Result ?? new PersonaViewModel());
+        }
+
+        private async Task LoadCatalogos(PersonaModel model)
+        {
+            var result = new
+            {
+                Paises = new List<PaisModel>(),
+                Provincias = new List<ProvinciaModel>(),
+                Ciudades = new List<CiudadModel>()
+            };
+
+            var paises = await CatalogoService.GetAllPaises();
+            if (paises.Success)
+            {
+                result.Paises.AddRange(paises.Result);
+            }
+
+            var selectedPais = result.Paises.FirstOrDefault(x => x.Nombre.Equals(model.Pais?.Trim(), StringComparison.OrdinalIgnoreCase));
+
+            if (selectedPais != null)
+            {
+                var provincias = await CatalogoService.GetProvinciasByPaisId(selectedPais.Id);
+                if (provincias.Success)
+                {
+                    result.Provincias.AddRange(provincias.Result);
+
+
+                    var selectedProvincia = result.Provincias.FirstOrDefault(x => x.Nombre.Equals(model.Provincia?.Trim(), StringComparison.OrdinalIgnoreCase));
+
+                    if (selectedProvincia != null)
+                    {
+                        var ciudades = await CatalogoService.GetCiudadesByProvinciaId(selectedProvincia?.Id);
+                        if (ciudades.Success)
+                        {
+                            result.Ciudades.AddRange(ciudades.Result);
+                        }
+                    }
+                }
+            }
+
+            ViewData["paises"] = result.Paises;
+            ViewData["provincias"] = result.Provincias;
+            ViewData["ciudades"] = result.Ciudades;
         }
     }
 }

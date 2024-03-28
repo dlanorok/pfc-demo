@@ -2,8 +2,8 @@
 
 namespace PFC.Demo.Domain.Models
 {
-    public class PersonaViewModel : PersonaEntity
+    public class PersonaViewModel : PersonaModel
     {
-        public List<CuentaBancariaEntity> CuentasBancarias { get; set; } = new List<CuentaBancariaEntity>();
+        public List<CuentaBancariaModel> CuentasBancarias { get; set; } = new List<CuentaBancariaModel>();
     }
 }

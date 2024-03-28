@@ -1,13 +1,11 @@
 ﻿using PFC.Demo.Domain.Models;
 using PFC.Demo.DataAccess;
-using PFC.Demo.Domain.Models;
 using PFC.Demo.Domain.Models.Request;
 using System;
 using System.Collections.Generic;
 using System.Data.SqlClient;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+using PFC.Demo.BusinessLogic.Extensions;
+using PFC.Demo.DataAccess.Entities;
 
 namespace PFC.Demo.BusinessLogic
 {
@@ -24,10 +22,11 @@ namespace PFC.Demo.BusinessLogic
 
                 if (data != null)
                 {
+                    var model = data.ConvertTo<PersonaViewModel>();
                     var cuentasBancarias = CuentaBancariaDao.GetAllByPersonaId(id, connection);
-                    data.CuentasBancarias = cuentasBancarias;
-                    
-                    result.Result = data;
+                    model.CuentasBancarias = cuentasBancarias.ConvertTo<List<CuentaBancariaModel>>();
+
+                    result.Result = model;
                 }
                 else
                 {
@@ -41,9 +40,9 @@ namespace PFC.Demo.BusinessLogic
             return result;
         }
 
-        public static ResultModel<List<PersonaEntity>> GetAllPersonas()
+        public static ResultModel<List<PersonaModel>> GetAllPersonas()
         {
-            ResultModel<List<PersonaEntity>> result = new ResultModel<List<PersonaEntity>>();
+            ResultModel<List<PersonaModel>> result = new ResultModel<List<PersonaModel>>();
             using (var connection = ConnectionFactory.CreateConnection())
             {
                 connection.Open();
@@ -52,7 +51,7 @@ namespace PFC.Demo.BusinessLogic
 
                 if (data != null)
                 {
-                    result.Result = data;
+                    result.Result = data.ConvertTo<List<PersonaModel>>();
                 }
                 else
                 {
@@ -76,7 +75,8 @@ namespace PFC.Demo.BusinessLogic
                 try
                 {
                     transaction = connection.BeginTransaction(System.Data.IsolationLevel.ReadCommitted);
-                    PersonaDao.Create(request, connection, transaction);
+                    var model = request.ConvertTo<PersonaUpdateEntity>();
+                    PersonaDao.Create(model, connection, transaction);
                     transaction.Commit();
                 }
                 catch (Exception ex)
@@ -85,11 +85,12 @@ namespace PFC.Demo.BusinessLogic
                     {
                         transaction.Rollback();
                     }
+
                     throw ex;
                 }
                 finally
                 {
-                    if(connection != null)
+                    if (connection != null)
                     {
                         connection.Close();
                     }
@@ -109,7 +110,8 @@ namespace PFC.Demo.BusinessLogic
                 try
                 {
                     transaction = connection.BeginTransaction(System.Data.IsolationLevel.ReadCommitted);
-                    PersonaDao.Update(id, request, connection, transaction);
+                    var model = request.ConvertTo<PersonaUpdateEntity>();
+                    PersonaDao.Update(id, model, connection, transaction);
                     transaction.Commit();
                 }
                 catch (Exception ex)
@@ -118,6 +120,7 @@ namespace PFC.Demo.BusinessLogic
                     {
                         transaction.Rollback();
                     }
+
                     throw ex;
                 }
                 finally
@@ -146,7 +149,7 @@ namespace PFC.Demo.BusinessLogic
                     {
                         throw new Exception("El registro no se puede eliminar porque tiene cuentas activas.");
                     }
-                    
+
                     transaction = connection.BeginTransaction(System.Data.IsolationLevel.ReadCommitted);
                     PersonaDao.Delete(id, connection, transaction);
 
@@ -158,6 +161,7 @@ namespace PFC.Demo.BusinessLogic
                     {
                         transaction.Rollback();
                     }
+
                     throw ex;
                 }
                 finally

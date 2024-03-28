@@ -1,130 +1,154 @@
-﻿@model PFC.Demo.Domain.Models.PersonaViewModel 
+﻿@using PFC.Demo.ClientApp.Services;
+@using PFC.Demo.Domain.Models;
+@model PersonaViewModel
 
 @{
-    ViewBag.Title = "Editar Informacion de la Persona";
+    if (Model.Id > 0)
+    {
+        ViewBag.Title = "Editar Registro";
+    }
+    else
+    {
+        ViewBag.Title = "Crear Nuevo Registro";
+    }
+
+    var paises       = ViewData["paises"] as List<PaisModel>;
+    var provincias   = ViewData["provincias"] as List<ProvinciaModel>;
+    var ciudades     = ViewData["ciudades"] as List<CiudadModel>;
+    var errorMessage = ViewData["Message"]?.ToString() ?? "";
 }
 
-<h2>Persona</h2>
+<h2>Clientes</h2>
 
 
 @using (Html.BeginForm())
 {
     @Html.AntiForgeryToken()
-    
-<div class="form-horizontal">
-    <h4>@ViewBag.Title</h4>
-    <div class="form-group">
-        <div class="col">
 
+    <div class="form-horizontal">
+        <h4>@ViewBag.Title</h4>
+        <div class="form-group">
+            <div class="col">
+
+            </div>
+            <div class="col-md-offset-2 col-md-10">
+                <input type="submit" value="Guardar Registro" class="btn btn-success btn-outline"/>
+            </div>
         </div>
-        <div class="col-md-offset-2 col-md-10">
-            <input type="submit" value="Guardar Registro" class="btn btn-success btn-outline" />
+        <hr/>
+        @Html.ValidationSummary(true, "", new { @class = "text-danger" })
+        @if (!string.IsNullOrEmpty(errorMessage))
+        {
+            <div class="alert alert-danger alert-save-error" role="alert">
+                @errorMessage
+            </div>
+        }
+        @if (Model.Id > 0)
+        {
+            @Html.HiddenFor(model => model.Id)
+        }
+
+        <div class="row">
+            <div class="col">
+
+
+                <div class="form-group">
+                    @Html.LabelFor(model => model.Identificacion, htmlAttributes: new { @class = "control-label col-md-2" })
+                    <div class="col-md-10">
+                        @Html.EditorFor(model => model.Identificacion, new { htmlAttributes = new { @class = "form-control" } })
+                        @Html.ValidationMessageFor(model => model.Identificacion, "", new { @class = "text-danger" })
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    @Html.LabelFor(model => model.Nombre, htmlAttributes: new { @class = "control-label col-md-2" })
+                    <div class="col-md-10">
+                        @Html.EditorFor(model => model.Nombre, new { htmlAttributes = new { @class = "form-control" } })
+                        @Html.ValidationMessageFor(model => model.Nombre, "", new { @class = "text-danger" })
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    @Html.LabelFor(model => model.Apellidos, htmlAttributes: new { @class = "control-label col-md-2" })
+                    <div class="col-md-10">
+                        @Html.EditorFor(model => model.Apellidos, new { htmlAttributes = new { @class = "form-control" } })
+                        @Html.ValidationMessageFor(model => model.Apellidos, "", new { @class = "text-danger" })
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    @Html.LabelFor(model => model.FechaNacimiento, htmlAttributes: new { @class = "control-label col-md-2" })
+                    <div class="col-md-10">
+                        <input id="FechaNacimiento" name="FechaNacimiento" type="date" lang="es-EC" value="@Model.FechaNacimiento.ToString("yyyy-MM-dd")"
+                               class="form-control"/>
+                        @Html.ValidationMessageFor(model => model.FechaNacimiento, "", new { @class = "text-danger" })
+                    </div>
+                </div>
+            </div>
+            <div class="col">
+
+                <div class="form-group">
+                    @Html.LabelFor(model => model.Pais, htmlAttributes: new { @class = "control-label col-md-2" })
+                    <div class="col-md-10">
+                        @Html.DropDownListFor(model => model.Pais, paises.ToSelectList(), "Seleccione el pais", new { @class = "form-control" })
+                        @Html.ValidationMessageFor(model => model.Pais, "", new { @class = "text-danger" })
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    @Html.LabelFor(model => model.Provincia, htmlAttributes: new { @class = "control-label col-md-2" })
+                    <div class="col-md-10">
+                        @Html.DropDownListFor(model => model.Provincia, provincias.ToSelectList(), "Seleccione la provincia", new { @class = "form-control" })
+                        @Html.ValidationMessageFor(model => model.Provincia, "", new { @class = "text-danger" })
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    @Html.LabelFor(model => model.Ciudad, htmlAttributes: new { @class = "control-label col-md-2" })
+                    <div class="col-md-10">
+                        @Html.DropDownListFor(model => model.Ciudad, ciudades.ToSelectList(), "Seleccione la ciudad", new { @class = "form-control" })
+                        @Html.ValidationMessageFor(model => model.Ciudad, "", new { @class = "text-danger" })
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    @Html.LabelFor(model => model.Direccion, htmlAttributes: new { @class = "control-label col-md-2" })
+                    <div class="col-md-10">
+                        @Html.EditorFor(model => model.Direccion, new { htmlAttributes = new { @class = "form-control" } })
+                        @Html.ValidationMessageFor(model => model.Direccion, "", new { @class = "text-danger" })
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    @Html.LabelFor(model => model.Referencia, htmlAttributes: new { @class = "control-label col-md-2" })
+                    <div class="col-md-10">
+                        @Html.EditorFor(model => model.Referencia, new { htmlAttributes = new { @class = "form-control" } })
+                        @Html.ValidationMessageFor(model => model.Referencia, "", new { @class = "text-danger" })
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    @Html.LabelFor(model => model.CodigoPostal, htmlAttributes: new { @class = "control-label col-md-2" })
+                    <div class="col-md-10">
+                        @Html.EditorFor(model => model.CodigoPostal, new { htmlAttributes = new { @class = "form-control" } })
+                        @Html.ValidationMessageFor(model => model.CodigoPostal, "", new { @class = "text-danger" })
+                    </div>
+                </div>
+
+
+            </div>
         </div>
+
+        <div class="row">
+            <div class="col" id="cuentas_bancarias">
+                @if(Model.Id > 0){
+                    Html.RenderPartial("CuentasBancarias", Model);
+                }
+            </div>
+        </div>
+
+
     </div>
-    <hr />
-    @Html.ValidationSummary(true, "", new { @class = "text-danger" })
-    @Html.HiddenFor(model => model.Id)
-    <div class="row">
-        <div class="col">
-
-
-            <div class="form-group">
-                @Html.LabelFor(model => model.Identificacion, htmlAttributes: new { @class = "control-label col-md-2" })
-                <div class="col-md-10">
-                    @Html.EditorFor(model => model.Identificacion, new { htmlAttributes = new { @class = "form-control" } })
-                    @Html.ValidationMessageFor(model => model.Identificacion, "", new { @class = "text-danger" })
-                </div>
-            </div>
-
-            <div class="form-group">
-                @Html.LabelFor(model => model.Nombre, htmlAttributes: new { @class = "control-label col-md-2" })
-                <div class="col-md-10">
-                    @Html.EditorFor(model => model.Nombre, new { htmlAttributes = new { @class = "form-control" } })
-                    @Html.ValidationMessageFor(model => model.Nombre, "", new { @class = "text-danger" })
-                </div>
-            </div>
-
-            <div class="form-group">
-                @Html.LabelFor(model => model.Apellidos, htmlAttributes: new { @class = "control-label col-md-2" })
-                <div class="col-md-10">
-                    @Html.EditorFor(model => model.Apellidos, new { htmlAttributes = new { @class = "form-control" } })
-                    @Html.ValidationMessageFor(model => model.Apellidos, "", new { @class = "text-danger" })
-                </div>
-            </div>
-
-            <div class="form-group">
-                @Html.LabelFor(model => model.FechaNacimiento, htmlAttributes: new { @class = "control-label col-md-2" })
-                <div class="col-md-10">
-                    <input id="FechaNacimiento" name="FechaNacimiento" type="date" lang="es-EC" value="@Model.FechaNacimiento.ToString("yyyy-MM-dd")" class="form-control" />
-                    @Html.ValidationMessageFor(model => model.FechaNacimiento, "", new { @class = "text-danger" })
-                </div>
-            </div>
-        </div>
-        <div class="col">
-
-            <div class="form-group">
-                @Html.LabelFor(model => model.Direccion, htmlAttributes: new { @class = "control-label col-md-2" })
-                <div class="col-md-10">
-                    @Html.EditorFor(model => model.Direccion, new { htmlAttributes = new { @class = "form-control" } })
-                    @Html.ValidationMessageFor(model => model.Direccion, "", new { @class = "text-danger" })
-                </div>
-            </div>
-
-            <div class="form-group">
-                @Html.LabelFor(model => model.Referencia, htmlAttributes: new { @class = "control-label col-md-2" })
-                <div class="col-md-10">
-                    @Html.EditorFor(model => model.Referencia, new { htmlAttributes = new { @class = "form-control" } })
-                    @Html.ValidationMessageFor(model => model.Referencia, "", new { @class = "text-danger" })
-                </div>
-            </div>
-
-            <div class="form-group">
-                @Html.LabelFor(model => model.Ciudad, htmlAttributes: new { @class = "control-label col-md-2" })
-                <div class="col-md-10">
-                    @Html.EditorFor(model => model.Ciudad, new { htmlAttributes = new { @class = "form-control" } })
-                    @Html.ValidationMessageFor(model => model.Ciudad, "", new { @class = "text-danger" })
-                </div>
-            </div>
-
-            <div class="form-group">
-                @Html.LabelFor(model => model.Provincia, htmlAttributes: new { @class = "control-label col-md-2" })
-                <div class="col-md-10">
-                    @Html.EditorFor(model => model.Provincia, new { htmlAttributes = new { @class = "form-control" } })
-                    @Html.ValidationMessageFor(model => model.Provincia, "", new { @class = "text-danger" })
-                </div>
-            </div>
-
-            <div class="form-group">
-                @Html.LabelFor(model => model.Pais, htmlAttributes: new { @class = "control-label col-md-2" })
-                <div class="col-md-10">
-                    @Html.EditorFor(model => model.Pais, new { htmlAttributes = new { @class = "form-control" } })
-                    @Html.ValidationMessageFor(model => model.Pais, "", new { @class = "text-danger" })
-                </div>
-            </div>
-
-            <div class="form-group">
-                @Html.LabelFor(model => model.CodigoPostal, htmlAttributes: new { @class = "control-label col-md-2" })
-                <div class="col-md-10">
-                    @Html.EditorFor(model => model.CodigoPostal, new { htmlAttributes = new { @class = "form-control" } })
-                    @Html.ValidationMessageFor(model => model.CodigoPostal, "", new { @class = "text-danger" })
-                </div>
-            </div>
-
-
-
-        </div>
-    </div>
-
-    <div class="row">
-        <div class="col" id="cuentas_bancarias">
-            @{
-                Html.RenderPartial("CuentasBancarias", Model);
-            }
-        </div>
-    </div>
-
-
-</div>
 }
 
 <div>
@@ -132,5 +156,71 @@
 </div>
 
 @section Scripts {
-    @Scripts.Render("~/bundles/jqueryval")
+
+    <script> 
+        var paisDropDown = document.getElementById("Pais");
+        var provinciaDropDown = document.getElementById("Provincia");
+        var ciudadDropDown = document.getElementById("Ciudad");
+
+        paisDropDown.addEventListener("change", function (e) {
+            var paisId = e.target.value;
+            ciudadDropDown.innerHTML = "";
+            provinciaDropDown.innerHTML = "";
+            fetch(`/catalogo/GetProvinciasByPaisId/${paisId}`)
+                .then(function (response) {
+                    if (response.ok) {
+                        response.json().then(result =>{
+                            var provincias = result.Result;
+                            if (provincias)
+                            for (var i = 0; i < provincias.length; i++) {
+                                var provincia = provincias[i];
+                                provinciaDropDown.appendChild(createOption(provincia.Nombre));
+                            }
+                        });
+                    }
+                });
+            
+        });
+
+        provinciaDropDown.addEventListener("change", function (e) {
+            var provinciaId = e.target.value;
+            
+            ciudadDropDown.innerHTML = "";
+            fetch(`/catalogo/GetCiudadesByProvinciaId/${provinciaId}`)
+                .then(function (response) {
+                    if (response.ok){
+                        response.json().then(result =>{
+                            if (result.Success) {
+                                var ciudades = result.Result;
+                                if (ciudades)
+                                for (var i = 0; i < ciudades.length; i++) {
+                                    var ciudad = ciudades[i];
+                                    ciudadDropDown.appendChild(createOption(ciudad.Nombre))
+                                }
+                            }
+                        });
+                    }
+                });
+        });
+
+        function createOption(text){
+            var option = document.createElement("option");
+            option.text = text;
+            return option;
+        }
+        
+        var errorDiv$ = document.getElementsByClassName("alert-save-error");
+
+        var errorMessage = '@Html.Raw(errorMessage)';
+        if (errorMessage){
+            document.addEventListener("DOMContentLoaded", function (){
+                if (errorMessage){
+                    $(errorDiv$).show();
+                }
+                setTimeout(function (){
+                    $(errorDiv$).hide();
+                }, 5000)    
+            });
+        }
+    </script>
 }

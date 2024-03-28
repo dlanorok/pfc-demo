@@ -15,7 +15,7 @@ namespace PFC.Demo.ClientApp.Controllers
         // GET: CuentaBancaria/Create
         public ActionResult Create(int personaId)
         {
-            var model = new CuentaBancariaEntity
+            var model = new CuentaBancariaModel
             {
                 PersonaId = personaId
             };
@@ -56,7 +56,6 @@ namespace PFC.Demo.ClientApp.Controllers
             try
             {
                 var result = await Services.CuentaBancariaService.ActualizarCuentaBancaria(id, model);
-
                 return Json(result);
             }
             catch

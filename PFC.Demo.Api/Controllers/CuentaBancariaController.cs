@@ -36,6 +36,16 @@ namespace PFC.Demo.Domain.Controllers
         {
             try
             {
+                if (model == null)
+                {
+                    throw new Exception("Debe especificar la informacion de la cuenta bancaria!");
+                }
+
+                if (!ModelState.IsValid)
+                {
+                    return Request.CreateErrorResponse(HttpStatusCode.BadRequest, ModelState);
+                }
+
                 var result = CuentaBancariaManager.CrearCuentaBancaria(model);
                 if (!result.Success)
                 {
@@ -55,6 +65,16 @@ namespace PFC.Demo.Domain.Controllers
         {
             try
             {
+                if (model == null)
+                {
+                    throw new Exception("Debe especificar la informacion de la cuenta bancaria!");
+                }
+
+                if (!ModelState.IsValid)
+                {
+                    return Request.CreateErrorResponse(HttpStatusCode.BadRequest, ModelState);
+                }
+
                 var result = CuentaBancariaManager.ActualizarCuentaBancaria(id, model);
                 if (!result.Success)
                 {

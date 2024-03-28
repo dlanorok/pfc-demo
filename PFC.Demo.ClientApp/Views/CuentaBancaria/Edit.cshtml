@@ -1,12 +1,12 @@
-﻿@model PFC.Demo.Domain.Models.CuentaBancariaEntity
+﻿@model PFC.Demo.Domain.Models.CuentaBancariaModel
 @{
-    var viewTitle = "Crear Cuenta";
+    var viewTitle  = "Crear Cuenta";
     var actionName = "Create";
     var actionForm = Url.Action(actionName, "CuentaBancaria");
 
     if (Model.Id > 0)
     {
-        viewTitle = "Editar Cuenta";
+        viewTitle  = "Editar Cuenta";
         actionName = "Edit";
         actionForm = Url.Action(actionName, "CuentaBancaria", new { Id = Model.Id });
     }
@@ -58,7 +58,7 @@
                     <div class="form-group">
                         @Html.LabelFor(model => model.Balance, htmlAttributes: new { @class = "control-label col-md-2" })
                         <div class="col-md-10">
-                            @Html.EditorFor(model => model.Balance, new { htmlAttributes = new { @class = "form-control" } })
+                            @Html.EditorFor(model => model.Balance, new { htmlAttributes = new { @type = "number", min = 0, @class = "form-control" } })
                             @Html.ValidationMessageFor(model => model.Balance, "", new { @class = "text-danger" })
                         </div>
                     </div>
@@ -74,7 +74,6 @@
                 </div>
 
 
-
             </div>
             <div class="modal-footer">
                 <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
@@ -85,16 +84,17 @@
 </form>
 
 <script>
-    
+    var cuentaBancariaForm = document.getElementById("CuentaBancariaForm");
 
     function guardarCuentaBancaria(e) {
         e.preventDefault();
-
+        $.validator.unobtrusive.parse($(cuentaBancariaForm));
+        if (!$(cuentaBancariaForm).valid())
+            return false;
         
         var action = '@Html.Raw(actionForm)';
-        var form_data = $("#CuentaBancariaForm").serializeJson();
+        var form_data = $(cuentaBancariaForm).serializeJson();
         console.log(action, form_data);
-
         $.ajax({
             type: "POST",
             url: action,
@@ -135,6 +135,9 @@
         }, 5000);
     }
 
-    document.getElementById("CuentaBancariaForm")
-            .addEventListener("submit", guardarCuentaBancaria);
+    cuentaBancariaForm.addEventListener("submit", guardarCuentaBancaria);
+    document.addEventListener("DOMContentLoaded", function (){
+        $.validator.unobtrusive.parse(cuentaBancariaForm);
+        !$(cuentaBancariaForm).valid();
+    });
 </script>

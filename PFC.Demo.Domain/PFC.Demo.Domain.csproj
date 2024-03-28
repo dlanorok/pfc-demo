@@ -42,11 +42,14 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="Models\CuentaBancariaEntity.cs" />
+    <Compile Include="Models\CiudadModel.cs" />
+    <Compile Include="Models\CuentaBancariaModel.cs" />
     <Compile Include="Models\CuentaBancariaUpdateModel.cs" />
-    <Compile Include="Models\PersonaEntity.cs" />
+    <Compile Include="Models\PaisModel.cs" />
+    <Compile Include="Models\PersonaModel.cs" />
     <Compile Include="Models\PersonaUpdateModel.cs" />
     <Compile Include="Models\PersonaViewModel.cs" />
+    <Compile Include="Models\ProvinciaModel.cs" />
     <Compile Include="Models\ResultModel.cs" />
     <Compile Include="Models\TipoCuentaEnum.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />

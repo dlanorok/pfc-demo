@@ -8,14 +8,16 @@ using System.Data.SqlClient;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using PFC.Demo.BusinessLogic.Extensions;
+using PFC.Demo.DataAccess.Entities;
 
 namespace PFC.Demo.BusinessLogic
 {
     public static class CuentaBancariaManager
     {
-        public static ResultModel<CuentaBancariaEntity> GetCuentaBancariaById(int id)
+        public static ResultModel<CuentaBancariaModel> GetCuentaBancariaById(int id)
         {
-            ResultModel<CuentaBancariaEntity> result = new ResultModel<CuentaBancariaEntity>();
+            ResultModel<CuentaBancariaModel> result = new ResultModel<CuentaBancariaModel>();
             using (var connection = ConnectionFactory.CreateConnection())
             {
                 connection.Open();
@@ -24,7 +26,7 @@ namespace PFC.Demo.BusinessLogic
 
                 if (data != null)
                 {
-                    result.Result = data;
+                    result.Result = data.ConvertTo<CuentaBancariaModel>();
                 }
                 else
                 {
@@ -38,9 +40,9 @@ namespace PFC.Demo.BusinessLogic
             return result;
         }
 
-        public static ResultModel<List<CuentaBancariaEntity>> GetAllCuentaBancarias(int personaId)
+        public static ResultModel<List<CuentaBancariaModel>> GetAllCuentaBancarias(int personaId)
         {
-            ResultModel<List<CuentaBancariaEntity>> result = new ResultModel<List<CuentaBancariaEntity>>();
+            ResultModel<List<CuentaBancariaModel>> result = new ResultModel<List<CuentaBancariaModel>>();
             using (var connection = ConnectionFactory.CreateConnection())
             {
                 connection.Open();
@@ -49,7 +51,7 @@ namespace PFC.Demo.BusinessLogic
 
                 if (data != null)
                 {
-                    result.Result = data;
+                    result.Result = data.ConvertTo<List<CuentaBancariaModel>>();
                 }
                 else
                 {
@@ -73,7 +75,8 @@ namespace PFC.Demo.BusinessLogic
                 try
                 {
                     transaction = connection.BeginTransaction(System.Data.IsolationLevel.ReadCommitted);
-                    CuentaBancariaDao.Create(request, connection, transaction);
+                    var model = request.ConvertTo<CuentaBancariaUpdateEntity>();
+                    CuentaBancariaDao.Create(model, connection, transaction);
                     transaction.Commit(); 
                 }
                 catch (Exception ex)
@@ -106,7 +109,8 @@ namespace PFC.Demo.BusinessLogic
                 try
                 {
                     transaction = connection.BeginTransaction(System.Data.IsolationLevel.ReadCommitted);
-                    CuentaBancariaDao.Update(id, request, connection, transaction);
+                    var model = request.ConvertTo<CuentaBancariaUpdateEntity>();
+                    CuentaBancariaDao.Update(id, model, connection, transaction);
                     transaction.Commit(); 
                 }
                 catch (Exception ex)

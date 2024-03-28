@@ -38,54 +38,54 @@ namespace PFC.Demo.ClientApp.Services
             return new ResultModel<PersonaViewModel>(null, "Error desconocido", false);
         }
 
-        public static async Task<ResultModel<List<CuentaBancariaEntity>>> GetCuentaBancariasByPersonaId(int id)
+        public static async Task<ResultModel<List<CuentaBancariaModel>>> GetCuentaBancariasByPersonaId(int id)
         {
             var httpClient = new HttpClient();
             var response = await httpClient.GetAsync($"{_baseUrl}/{id}/CuentasBancarias");
 
             if (response.IsSuccessStatusCode)
             {
-                if (response.GetResult<ResultModel<List<CuentaBancariaEntity>>>(out var result))
+                if (response.GetResult<ResultModel<List<CuentaBancariaModel>>>(out var result))
                 {
                     return result;
                 }
                 else if (response.GetResult<ResultModel>(out var model))
                 {
-                    return new ResultModel<List<CuentaBancariaEntity>>(null, model.Message, model.Success);
+                    return new ResultModel<List<CuentaBancariaModel>>(null, model.Message, model.Success);
                 }
             }
 
             if (response.GetResult<HttpError>(out var error))
             {
-                return new ResultModel<List<CuentaBancariaEntity>>(null, error.ExceptionMessage, false);
+                return new ResultModel<List<CuentaBancariaModel>>(null, error.ExceptionMessage, false);
             }
 
-            return new ResultModel<List<CuentaBancariaEntity>>(null, "Error desconocido", false);
+            return new ResultModel<List<CuentaBancariaModel>>(null, "Error desconocido", false);
         }
 
-        public static async Task<ResultModel<List<PersonaEntity>>> GetAllPersonas()
+        public static async Task<ResultModel<List<PersonaModel>>> GetAllPersonas()
         {
             var httpClient = new HttpClient();
             var response = await httpClient.GetAsync($"{_baseUrl}");
 
             if (response.IsSuccessStatusCode)
             {
-                if (response.GetResult<ResultModel<List<PersonaEntity>>>(out var result))
+                if (response.GetResult<ResultModel<List<PersonaModel>>>(out var result))
                 {
                     return result;
                 }
                 else if (response.GetResult<ResultModel>(out var model))
                 {
-                    return new ResultModel<List<PersonaEntity>>(null, model.Message, model.Success);
+                    return new ResultModel<List<PersonaModel>>(null, model.Message, model.Success);
                 }
             }
 
             if (response.GetResult<HttpError>(out var error))
             {
-                return new ResultModel<List<PersonaEntity>>(null, error.ExceptionMessage, false);
+                return new ResultModel<List<PersonaModel>>(null, error.ExceptionMessage, false);
             }
 
-            return new ResultModel<List<PersonaEntity>>(null, "Error desconocido", false);
+            return new ResultModel<List<PersonaModel>>(null, "Error desconocido", false);
         }
 
         public static async Task<ResultModel> CrearPersona(PersonaUpdateModel model)

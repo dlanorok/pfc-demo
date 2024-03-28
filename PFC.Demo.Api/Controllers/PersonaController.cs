@@ -3,6 +3,7 @@ using PFC.Demo.Domain.Models.Request;
 using System;
 using System.Net;
 using System.Net.Http;
+using System.Reflection;
 using System.Web.Http;
 
 namespace PFC.Demo.Domain.Controllers
@@ -54,6 +55,21 @@ namespace PFC.Demo.Domain.Controllers
         {
             try
             {
+                if (model == null)
+                {
+                    throw new Exception("Debe especificar la informacion del cliente!");
+                }
+
+                if (!ModelState.IsValid)
+                {
+                    return Request.CreateErrorResponse(HttpStatusCode.BadRequest, ModelState);
+                }
+
+                if (model.FechaNacimiento >= DateTime.Today.AddYears(-16))
+                {
+                    throw new Exception("El cliente debe tener 16 años o más de edad");
+                }
+                
                 var result = PersonaManager.CrearPersona(model);
                 if (!result.Success)
                 {
@@ -73,7 +89,18 @@ namespace PFC.Demo.Domain.Controllers
         {
             try
             {
+                if (model == null)
+                {
+                    throw new Exception("Debe especificar la informacion del cliente!");
+                }
+
+                if (!ModelState.IsValid)
+                {
+                    return Request.CreateErrorResponse(HttpStatusCode.BadRequest, ModelState);
+                }
+
                 var result = PersonaManager.ActualizarPersona(id, model);
+
                 if (!result.Success)
                 {
                     throw new Exception(result.Message);

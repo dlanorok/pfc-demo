@@ -20,6 +20,10 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution 
 		Stored Procedures.sql = Stored Procedures.sql
 	EndProjectSection
 EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "API", "API", "{7F0592A1-F0D4-417B-AD92-C6240B5630B6}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Web", "Web", "{BC3F3C93-A3CE-4B8B-88B4-BEC32FF619F3}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -52,5 +56,12 @@ Global
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {5BAAC0C3-3C22-47BB-9BA7-99AC6B034608}
+	EndGlobalSection
+	GlobalSection(NestedProjects) = preSolution
+		{56E48628-7B63-4455-A620-D367EBE3D4EF} = {7F0592A1-F0D4-417B-AD92-C6240B5630B6}
+		{8A938D74-D10E-47D3-B7A4-794701E73F94} = {7F0592A1-F0D4-417B-AD92-C6240B5630B6}
+		{80172911-E15A-4828-AD8C-5EBF87E86640} = {7F0592A1-F0D4-417B-AD92-C6240B5630B6}
+		{7EA42EFE-D308-4266-8BB0-B019B833A2DE} = {7F0592A1-F0D4-417B-AD92-C6240B5630B6}
+		{96AAA8C2-12F0-4837-9694-593D35883CDC} = {BC3F3C93-A3CE-4B8B-88B4-BEC32FF619F3}
 	EndGlobalSection
 EndGlobal
